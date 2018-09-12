@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace ANNOUNCEMENTS.Models
+namespace Repository.Models
 {
     public class Announcement
     {

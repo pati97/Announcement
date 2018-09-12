@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace ANNOUNCEMENTS.Models
+namespace Repository.Models
 {
     public class User : IdentityUser
     {
@@ -20,6 +20,7 @@ namespace ANNOUNCEMENTS.Models
 
         public string Name { get; set; }
         public string Surname { get; set; }
+        public int? Age { get; set; }
 
         #region additional field notmapped
 

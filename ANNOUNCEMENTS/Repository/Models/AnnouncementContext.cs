@@ -5,11 +5,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity.ModelConfiguration.Conventions;
 
-namespace ANNOUNCEMENTS.Models
+namespace Repository.Models
 {
-    // You can add profile data for the user by adding more properties to your User class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
-
-
+    
     public class AnnouncementContext : IdentityDbContext
     {
         public AnnouncementContext()
