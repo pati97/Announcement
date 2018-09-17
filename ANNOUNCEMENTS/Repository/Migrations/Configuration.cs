@@ -20,7 +20,9 @@ namespace Repository.Migrations
         {
             //For debugging Seed()
             if (System.Diagnostics.Debugger.IsAttached == false)
+            {
                 System.Diagnostics.Debugger.Launch();
+            }
 
             SeedRoles(context);
             SeedUsers(context);
@@ -52,9 +54,10 @@ namespace Repository.Migrations
             {
                 var user = new User { UserName = "Admin" };
                 var adminresult = manager.Create(user, "12345678");
-
                 if (adminresult.Succeeded)
+                {
                     manager.AddToRole(user.Id, "Admin");
+                }
             }
         }
 
@@ -81,6 +84,7 @@ namespace Repository.Migrations
         {
             for (int i = 1; i <= 10; i++)
             {
+                // cat ? animal ?
                 var cat = new Category()
                 {
                     Id = i,
@@ -100,6 +104,7 @@ namespace Repository.Migrations
         {
             for (int i = 1; i <= 10; i++)
             {
+                // ocat ? only cat ?
                 var ocat = new Announcement_Category()
                 {
                     Id = i,
