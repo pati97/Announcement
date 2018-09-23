@@ -1,12 +1,14 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background-color: darkgrey;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    background-color: darkgray;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -23,10 +25,13 @@ textarea {
     max-width: 280px;
 }
 
-.tr:first-child{
+tr:first-child{
     background-color: #efefef;
 }
 
+tr{
+    background-color:lightgrey;
+}
 tr:hover{
     background-color: #efefef;
 }

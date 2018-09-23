@@ -8,19 +8,26 @@ using System.Web;
 using System.Web.Mvc;
 using Repository.Models;
 using System.Diagnostics;
+using Repository.Repo;
+using Repository.IRepo;
+using Microsoft.AspNet.Identity;
 
 namespace ANNOUNCEMENTS.Controllers
 {
     public class AnnouncementController : Controller
     {
-        private AnnouncementContext db = new AnnouncementContext();
+        private readonly IAnnouncementRepo _repo;
 
+        public AnnouncementController(IAnnouncementRepo repo)
+        {
+            _repo = repo;
+        }
+        
         // GET: Announcement
         public ActionResult Index()
         {
-            //db.Database.Log = message => Trace.WriteLine(message);
-            var announcements = db.Announcements.AsNoTracking();
-            return View(announcements.ToList());
+            var announcements = _repo.GetAnnouncement();
+            return View(announcements);
         }
 
         // GET: Announcement/Details/5
@@ -30,7 +37,7 @@ namespace ANNOUNCEMENTS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Announcement announcement = db.Announcements.Find(id);
+            Announcement announcement = _repo.GetAnnouncementById((int)id);
             if (announcement == null)
             {
                 return HttpNotFound();
@@ -40,26 +47,33 @@ namespace ANNOUNCEMENTS.Controllers
 
         // GET: Announcement/Create
         public ActionResult Create()
-        {
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Email");
+        {   
             return View();
         }
 
         // POST: Announcement/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Content,Title,DateOfAdd,UserId")] Announcement announcement)
+        public ActionResult Create([Bind(Include = "Content,Title")] Announcement announcement)
         {
             if (ModelState.IsValid)
             {
-                db.Announcements.Add(announcement);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                announcement.UserId = User.Identity.GetUserId();
+                announcement.DateOfAdd = DateTime.Now;
+                try
+                {
+                    _repo.Add(announcement);
+                    _repo.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch
+                {
+                    return View(announcement);
+                }
             }
-
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Email", announcement.UserId);
             return View(announcement);
         }
 
@@ -70,12 +84,11 @@ namespace ANNOUNCEMENTS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Announcement announcement = db.Announcements.Find(id);
+            Announcement announcement = _repo.GetAnnouncementById((int)id);
             if (announcement == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Email", announcement.UserId);
             return View(announcement);
         }
 
@@ -88,26 +101,38 @@ namespace ANNOUNCEMENTS.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(announcement).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    //announcement.UserId = "fdfdfd";
+                    _repo.Edit(announcement);
+                    _repo.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch
+                {
+                    ViewBag.Error = true;
+                    return View(announcement);
+                }
             }
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Email", announcement.UserId);
+            ViewBag.Error = false;
             return View(announcement);
         }
 
         // GET: Announcement/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id, bool? error)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Announcement announcement = db.Announcements.Find(id);
+            Announcement announcement = _repo.GetAnnouncementById((int)id);
             if (announcement == null)
             {
                 return HttpNotFound();
             }
+            if (error != null)
+                ViewBag.Error = true;
+
             return View(announcement);
         }
 
@@ -116,19 +141,33 @@ namespace ANNOUNCEMENTS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Announcement announcement = db.Announcements.Find(id);
-            db.Announcements.Remove(announcement);
-            db.SaveChanges();
+            _repo.DeleteAnnouncement(id);
+            try
+            {
+                _repo.SaveChanges();
+            }
+            catch
+            {
+                return RedirectToAction("Delete", new { id = id, error = true });
+            }
+
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
+        //Get: /Announcement/
+        public ActionResult Partial()
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            var announcement = _repo.GetAnnouncement();
+            return PartialView("Index", announcement);
         }
+
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        db.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
     }
 }

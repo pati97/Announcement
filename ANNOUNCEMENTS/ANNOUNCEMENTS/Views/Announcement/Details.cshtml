@@ -1,21 +1,23 @@
 ﻿@model Repository.Models.Announcement
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Details Announcement number " + Model.Id;
+    ViewBag.Description = "Details Announcement number " + Model.Id + "Description for Google";
+    ViewBag.KeyWords = "Announcement, " + Model.Id + ", details";
 }
 
-<h2>Details</h2>
+<h2>Details Announcement number @Model.Id </h2>
 
 <div>
     <h4>Announcement</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.User.Email)
+            User Id:
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.User.Email)
+            @Html.DisplayFor(model => model.UserId)
         </dd>
 
         <dt>
@@ -45,6 +47,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary"}) 
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-warning" })
 </p>

@@ -43,6 +43,15 @@ namespace Repository.Migrations
                 };
                 roleManager.Create(role);
             }
+
+            if (!roleManager.RoleExists("Pracownik"))
+            {
+                var role = new IdentityRole()
+                {
+                    Name = "Pracownik"
+                };
+                roleManager.Create(role);
+            }
         }
 
         private void SeedUsers(AnnouncementContext context)
@@ -59,6 +68,27 @@ namespace Repository.Migrations
                     manager.AddToRole(user.Id, "Admin");
                 }
             }
+
+            if (!context.Users.Any(u => u.UserName == "Marek"))
+            {
+                var user = new User { UserName = "marek@AspNetMvc.pl" };
+                var adminresult = manager.Create(user, "12345678");
+                if (adminresult.Succeeded)
+                {
+                    manager.AddToRole(user.Id, "Pracownik");
+                }
+            }
+
+            if(!context.Users.Any(u => u.UserName == "Prezes"))
+            {
+                var user = new User { UserName = "prezes@AspNetMvc.pl" };
+                var adminresult = manager.Create(user, "12345678");
+                if(adminresult.Succeeded)
+                {
+                    manager.AddToRole(user.Id, "Admin");
+                }
+            }
+
         }
 
         private void SeedAnnouncements(AnnouncementContext context)
@@ -67,7 +97,7 @@ namespace Repository.Migrations
 
             for(int i = 1; i <= 10; i++)
             {
-                var ogl = new Announcement()
+                var announcement = new Announcement()
                 {
                     Id = i,
                     UserId = idUser,
@@ -75,7 +105,7 @@ namespace Repository.Migrations
                     Title = "Tytu³ og³oszenia " + i.ToString(),
                     DateOfAdd = DateTime.Now.AddDays(-i)
                 };
-                context.Set<Announcement>().AddOrUpdate(ogl);
+                context.Set<Announcement>().AddOrUpdate(announcement);
             }
             context.SaveChanges();
         }
@@ -84,8 +114,7 @@ namespace Repository.Migrations
         {
             for (int i = 1; i <= 10; i++)
             {
-                // cat ? animal ?
-                var cat = new Category()
+                var category = new Category()
                 {
                     Id = i,
                     Name = "Nazwa kategorii " + i.ToString(),
@@ -95,7 +124,7 @@ namespace Repository.Migrations
                     MetaWords = "S³owa kluczowe " + i.ToString(),
                     ParentId = i
                 };
-                context.Set<Category>().AddOrUpdate(cat);
+                context.Set<Category>().AddOrUpdate(category);
             }
             context.SaveChanges();
         }
@@ -104,14 +133,13 @@ namespace Repository.Migrations
         {
             for (int i = 1; i <= 10; i++)
             {
-                // ocat ? only cat ?
-                var ocat = new Announcement_Category()
+                var announcement_category = new Announcement_Category()
                 {
                     Id = i,
                     AnnouncementId = i / 2 + 1,
                     CategoryId = i / 2 + 2 
                 };
-                context.Set<Announcement_Category>().AddOrUpdate(ocat);
+                context.Set<Announcement_Category>().AddOrUpdate(announcement_category);
             }
             context.SaveChanges();
         }

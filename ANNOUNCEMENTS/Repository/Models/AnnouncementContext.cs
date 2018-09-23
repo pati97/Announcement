@@ -4,11 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using Repository.IRepo;
 
 namespace Repository.Models
 {
     
-    public class AnnouncementContext : IdentityDbContext
+    public class AnnouncementContext : IdentityDbContext, IAnnouncementContext
     {
         public AnnouncementContext()
             : base("DefaultConnection")

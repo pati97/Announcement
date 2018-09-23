@@ -47,7 +47,7 @@ namespace ANNOUNCEMENTS
 
             // Uncomment the following lines to enable logging in with third party login providers
             //app.UseMicrosoftAccountAuthentication(
-            //    clientId: "",
+            //    clientId: "",[=']
             //    clientSecret: "");
 
             //app.UseTwitterAuthentication(
@@ -57,6 +57,7 @@ namespace ANNOUNCEMENTS
             //app.UseFacebookAuthentication(
             //   appId: "",
             //   appSecret: "");
+
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             //{

@@ -1,10 +1,12 @@
 ﻿@model IEnumerable<Repository.Models.Announcement>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "The Announcement List - metatitle to 60 characters";
+    ViewBag.Description = "The Announcement List with our application - metadescription to 160 characters";
+    ViewBag.KeyWords = "Announcement, List, words, key, application";
 }
 
-<h2>The Announcements List</h2>
+<h1 style="text-align:center">The Announcements List</h1>
 
 <p>
     @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })
