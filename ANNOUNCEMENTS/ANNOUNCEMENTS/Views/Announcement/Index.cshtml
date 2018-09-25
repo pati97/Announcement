@@ -1,4 +1,7 @@
-﻿@model IEnumerable<Repository.Models.Announcement>
+﻿@model PagedList.IPagedList<Repository.Models.Announcement>
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css">
 
 @{
     ViewBag.Title = "The Announcement List - metatitle to 60 characters";
@@ -8,48 +11,64 @@
 
 <h1 style="text-align:center">The Announcements List</h1>
 
-<p>
-    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })
-</p>
+@if (User.Identity.IsAuthenticated)
+{
+    <p>
+        @Html.ActionLink("Create New Announcement", "Create", null, new { @class = "btn btn-primary" })
+    </p>
+}
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.UserId)
+            @Html.DisplayNameFor(model => model[0].UserId)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Content)
+            @Html.DisplayNameFor(model => model[0].Content)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model[0].Title)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DateOfAdd)
+            @Html.DisplayNameFor(model => model[0].DateOfAdd)
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Content)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateOfAdd)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }, new { @class = "btn btn-primary"}) 
-            <br />
-            @Html.ActionLink("Details", "Details", new { id=item.Id }, new { @class = "btn btn-warning"}) 
-            <br />
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id }, new { @class = "btn btn-danger"})
-        </td>
-    </tr>
-}
-
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateOfAdd)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-warning" })
+       
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Pracownik"))
+                {
+                    <br />
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })
+                    if (User.IsInRole("Admin"))
+                    {
+                        <br />
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                    }
+                }
+            </td>
+        </tr>
+    }
 </table>
+
+<div> 
+    <br />
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) with @Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page}))
+</div>

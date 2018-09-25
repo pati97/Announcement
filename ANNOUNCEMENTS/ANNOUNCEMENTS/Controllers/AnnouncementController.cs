@@ -11,6 +11,7 @@ using System.Diagnostics;
 using Repository.Repo;
 using Repository.IRepo;
 using Microsoft.AspNet.Identity;
+using PagedList;
 
 namespace ANNOUNCEMENTS.Controllers
 {
@@ -24,10 +25,13 @@ namespace ANNOUNCEMENTS.Controllers
         }
         
         // GET: Announcement
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
+            int currentPage = page ?? 1;
+            int onPage = 4;
             var announcements = _repo.GetAnnouncement();
-            return View(announcements);
+            announcements = announcements.OrderByDescending(o => o.DateOfAdd);
+            return View(announcements.ToPagedList(currentPage,onPage));
         }
 
         // GET: Announcement/Details/5
@@ -78,6 +82,7 @@ namespace ANNOUNCEMENTS.Controllers
         }
 
         // GET: Announcement/Edit/5
+        [Authorize]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -89,12 +94,17 @@ namespace ANNOUNCEMENTS.Controllers
             {
                 return HttpNotFound();
             }
+            else if (announcement.UserId != User.Identity.GetUserId() && !(User.IsInRole("Admin") || User.IsInRole("Pracownik")))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             return View(announcement);
         }
 
         // POST: Announcement/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Content,Title,DateOfAdd,UserId")] Announcement announcement)
@@ -119,6 +129,7 @@ namespace ANNOUNCEMENTS.Controllers
         }
 
         // GET: Announcement/Delete/5
+        [Authorize]
         public ActionResult Delete(int? id, bool? error)
         {
             if (id == null)
@@ -129,6 +140,10 @@ namespace ANNOUNCEMENTS.Controllers
             if (announcement == null)
             {
                 return HttpNotFound();
+            }
+            else if(announcement.UserId != User.Identity.GetUserId() && !User.IsInRole("Admin"))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             if (error != null)
                 ViewBag.Error = true;
@@ -155,10 +170,13 @@ namespace ANNOUNCEMENTS.Controllers
         }
 
         //Get: /Announcement/
-        public ActionResult Partial()
+        public ActionResult Partial(int? page)
         {
-            var announcement = _repo.GetAnnouncement();
-            return PartialView("Index", announcement);
+            int currentPage = page ?? 1;
+            int onPage = 4;
+            var announcements = _repo.GetAnnouncement();
+            announcements = announcements.OrderByDescending(o => o.DateOfAdd);
+            return PartialView("Index", announcements.ToPagedList<Announcement>(currentPage, onPage));
         }
 
         //protected override void Dispose(bool disposing)

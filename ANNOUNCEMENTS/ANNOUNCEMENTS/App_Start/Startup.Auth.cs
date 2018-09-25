@@ -59,11 +59,11 @@ namespace ANNOUNCEMENTS
             //   appSecret: "");
 
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "323543096354-ramtmabdssmntadusqvg4pqmk71f6e3j.apps.googleusercontent.com",
+                ClientSecret = "7Y5ZBSQYbRQg0qzJrBiZtxl-"
+            });
         }
     }
 }

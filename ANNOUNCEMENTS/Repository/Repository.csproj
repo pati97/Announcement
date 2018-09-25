@@ -123,13 +123,15 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\UnityConfig.cs" />
-    <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="IRepo\IAnnouncementContext.cs" />
     <Compile Include="IRepo\IAnnouncementRepo.cs" />
     <Compile Include="Migrations\201809121800265_start.cs" />
     <Compile Include="Migrations\201809121800265_start.Designer.cs">
       <DependentUpon>201809121800265_start.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809231659233_2.cs" />
+    <Compile Include="Migrations\201809231659233_2.Designer.cs">
+      <DependentUpon>201809231659233_2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AnnouncementContext.cs" />
@@ -145,6 +147,12 @@
     <EmbeddedResource Include="Migrations\201809121800265_start.resx">
       <DependentUpon>201809121800265_start.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809231659233_2.resx">
+      <DependentUpon>201809231659233_2.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Start\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

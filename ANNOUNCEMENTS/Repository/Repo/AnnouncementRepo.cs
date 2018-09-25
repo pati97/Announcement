@@ -25,6 +25,13 @@ namespace Repository.Repo
             return announcements;
         }
 
+        public IQueryable<Announcement> GetPage(int? page = 1, int? pageSize = 10 )
+        {
+            var announcements = _db.Announcements.OrderByDescending(o => o.DateOfAdd)
+                                .Skip((page.Value - 1)*pageSize.Value).Take(pageSize.Value);
+            return announcements;
+        }
+
         public Announcement GetAnnouncementById(int id)
         {
             var announcement = _db.Announcements.Find(id);

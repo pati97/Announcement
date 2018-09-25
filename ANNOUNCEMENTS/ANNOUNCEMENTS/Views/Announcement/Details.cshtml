@@ -1,4 +1,5 @@
 ﻿@model Repository.Models.Announcement
+@using Microsoft.AspNet.Identity
 
 @{
     ViewBag.Title = "Details Announcement number " + Model.Id;
@@ -47,6 +48,10 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary"}) 
+    @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Pracownik") ||  Model.UserId == User.Identity.GetUserId()))
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" }) 
+        @: |
+    }
     @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-warning" })
 </p>
