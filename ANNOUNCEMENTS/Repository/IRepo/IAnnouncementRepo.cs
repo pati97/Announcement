@@ -12,7 +12,8 @@ namespace Repository.IRepo
         IQueryable<Announcement> GetAnnouncement();
         IQueryable<Announcement> GetPage(int? page, int? pageSize);
         Announcement GetAnnouncementById(int id);
-        
+        //Announcement GetAnnouncementByFilter(string search = null);
+
         void Add(Announcement announcement);
         void Edit(Announcement announcement);
         void DeleteAnnouncement(int id);

@@ -25,13 +25,49 @@ namespace ANNOUNCEMENTS.Controllers
         }
         
         // GET: Announcement
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? page, string sortOrder)
         {
             int currentPage = page ?? 1;
             int onPage = 4;
+
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.IdSort = String.IsNullOrEmpty(sortOrder) ? "IdAscending" : "";
+            ViewBag.DateOfAddSort = sortOrder == "DataOfAddDescending" ? "DataOfAddAscending" :"DataOfAddDescending" ;
+            ViewBag.TitleSort = sortOrder == "TitleAscending" ? "TitleDescending" : "TitleAscending" ;
+            ViewBag.ContentSort = sortOrder == "ContentAscending" ? "ContentDescending": "ContentAscending" ;
+
             var announcements = _repo.GetAnnouncement();
-            announcements = announcements.OrderByDescending(o => o.DateOfAdd);
+
+            switch(sortOrder)
+            {
+                case "DataOfAddDescending":
+                    announcements = announcements.OrderByDescending(s => s.DateOfAdd);
+                    break;
+                case "DataOfAddAscending":
+                    announcements = announcements.OrderBy(s => s.DateOfAdd);
+                    break;
+                case "TitleAscending":
+                    announcements = announcements.OrderBy(s => s.Title);
+                    break;
+                case "TitleDescending":
+                    announcements = announcements.OrderByDescending(s => s.Title);
+                    break;
+                case "ContentAscending":
+                    announcements = announcements.OrderBy(s => s.Content);
+                    break;
+                case "ContentDescending":
+                    announcements = announcements.OrderByDescending(s => s.Content);
+                    break;
+                case "IdAscending":
+                    announcements = announcements.OrderBy(s => s.Id);
+                    break;
+                default:
+                    announcements = announcements.OrderByDescending(s => s.Id);
+                    break;
+            }
+            
             return View(announcements.ToPagedList(currentPage,onPage));
+
         }
 
         // GET: Announcement/Details/5
