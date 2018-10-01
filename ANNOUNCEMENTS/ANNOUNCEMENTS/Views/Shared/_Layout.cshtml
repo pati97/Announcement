@@ -32,9 +32,10 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Announcement <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li>@Html.ActionLink("The Annnouncement List", "Index", "Announcement")</li>
+                            <li>@Html.ActionLink("The Annnouncements List", "Index", "Announcement")</li>
                             @if (User.Identity.IsAuthenticated)
                             {
+                                <li>@Html.ActionLink("My Announcements ", "MyAnnouncements", "Announcement")</li>
                                 <li>@Html.ActionLink("Create the announcement", "Create", "Announcement")</li>
                             }
                             <li class="divider"></li>

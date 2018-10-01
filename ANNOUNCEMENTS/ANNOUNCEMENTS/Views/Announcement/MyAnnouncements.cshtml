@@ -4,12 +4,12 @@
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css">
 
 @{
-    ViewBag.Title = "The Announcements List - metatitle to 60 characters";
-    ViewBag.Description = "The Announcements List with our application - metadescription to 160 characters";
-    ViewBag.KeyWords = "Announcements, List, words, key, application";
+    ViewBag.Title = "My Announcements List - metatitle to 60 characters";
+    ViewBag.Description = "My Announcements List with our application - metadescription to 160 characters";
+    ViewBag.KeyWords = "My,Announcements, List, words, key, application";
 }
 
-<h1 style="text-align:center"> The Announcements List</h1>
+<h1 style="text-align:center"> My Announcements List</h1>
 
 @if (User.Identity.IsAuthenticated)
 {
@@ -17,15 +17,15 @@
         @Html.ActionLink("Create New Announcement", "Create", null, new { @class = "btn btn-primary" })
     </p>
 }
-<br/>
+<br />
 @using (Html.BeginForm())
 {
     <p>
         Search: @Html.TextBox("searchData", ViewBag.FilterValue as string)
-        <input type= "submit" value="Find"/>
+        <input type="submit" value="Find" />
     </p>
 }
-<br/>
+<br />
 <table class="table">
     <tr>
         <th>
@@ -60,7 +60,7 @@
             </td>
             <td>
                 @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-warning" })
-       
+
                 @if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Pracownik"))
                 {
                     <br />
@@ -76,8 +76,9 @@
     }
 </table>
 
-<div> 
+<div>
     <br />
     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) with @Model.PageCount
-    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, FilterValue = ViewBag.FilterValue }))
+    @Html.PagedListPager(Model, page => Url.Action("MyAnnnouncements", new { page, sortOrder = ViewBag.CurrentSort, FilterValue = ViewBag.FilterValue }))
 </div>
+

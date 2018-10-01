@@ -23,22 +23,38 @@ namespace ANNOUNCEMENTS.Controllers
         {
             _repo = repo;
         }
-        
+
         // GET: Announcement
-        public ActionResult Index(int? page, string sortOrder)
+        public ActionResult Index(int? page, string sortOrder, string searchData, string FilterValue)
         {
             int currentPage = page ?? 1;
             int onPage = 4;
 
             ViewBag.CurrentSort = sortOrder;
             ViewBag.IdSort = String.IsNullOrEmpty(sortOrder) ? "IdAscending" : "";
-            ViewBag.DateOfAddSort = sortOrder == "DataOfAddDescending" ? "DataOfAddAscending" :"DataOfAddDescending" ;
-            ViewBag.TitleSort = sortOrder == "TitleAscending" ? "TitleDescending" : "TitleAscending" ;
-            ViewBag.ContentSort = sortOrder == "ContentAscending" ? "ContentDescending": "ContentAscending" ;
+            ViewBag.DateOfAddSort = sortOrder == "DataOfAddDescending" ? "DataOfAddAscending" : "DataOfAddDescending";
+            ViewBag.TitleSort = sortOrder == "TitleAscending" ? "TitleDescending" : "TitleAscending";
+            ViewBag.ContentSort = sortOrder == "ContentAscending" ? "ContentDescending" : "ContentAscending";
+
+            if (searchData != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchData = FilterValue;
+            }
+            ViewBag.FilterValue = searchData;
 
             var announcements = _repo.GetAnnouncement();
 
-            switch(sortOrder)
+            if (!String.IsNullOrEmpty(searchData))
+            {
+                announcements = announcements.Where(o => o.Content.ToUpper().Contains(searchData.ToUpper())
+                                || o.Title.ToUpper().Contains(searchData.ToUpper()));
+            }
+
+            switch (sortOrder)
             {
                 case "DataOfAddDescending":
                     announcements = announcements.OrderByDescending(s => s.DateOfAdd);
@@ -65,11 +81,22 @@ namespace ANNOUNCEMENTS.Controllers
                     announcements = announcements.OrderByDescending(s => s.Id);
                     break;
             }
-            
-            return View(announcements.ToPagedList(currentPage,onPage));
+
+            return View(announcements.ToPagedList(currentPage, onPage));
 
         }
 
+        [OutputCache(Duration = 1000)]
+        public ActionResult MyAnnouncements(int? page)
+        {
+            int currentpage = page ?? 1;
+            int onPage = 3;
+            string userId = User.Identity.GetUserId();
+            var announcements = _repo.GetAnnouncement();
+            announcements = announcements.OrderByDescending(d => d.DateOfAdd).Where(o => o.UserId == userId);
+
+            return View(announcements.ToPagedList(currentpage, onPage));
+        }
         // GET: Announcement/Details/5
         public ActionResult Details(int? id)
         {
@@ -87,7 +114,7 @@ namespace ANNOUNCEMENTS.Controllers
 
         // GET: Announcement/Create
         public ActionResult Create()
-        {   
+        {
             return View();
         }
 
@@ -107,7 +134,7 @@ namespace ANNOUNCEMENTS.Controllers
                 {
                     _repo.Add(announcement);
                     _repo.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("MyAnnouncements");
                 }
                 catch
                 {
@@ -177,7 +204,7 @@ namespace ANNOUNCEMENTS.Controllers
             {
                 return HttpNotFound();
             }
-            else if(announcement.UserId != User.Identity.GetUserId() && !User.IsInRole("Admin"))
+            else if (announcement.UserId != User.Identity.GetUserId() && !User.IsInRole("Admin"))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }

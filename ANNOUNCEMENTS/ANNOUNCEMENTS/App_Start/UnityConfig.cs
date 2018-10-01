@@ -54,6 +54,7 @@ namespace ANNOUNCEMENTS
 
             container.RegisterType<IAnnouncementContext, AnnouncementContext>(new PerRequestLifetimeManager());
             container.RegisterType<IAnnouncementRepo, AnnouncementRepo>(new PerRequestLifetimeManager());
+            container.RegisterType<ICategoryRepo, CategoryRepo>(new PerRequestLifetimeManager());
             
         }
     }

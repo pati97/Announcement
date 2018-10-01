@@ -125,6 +125,7 @@
   <ItemGroup>
     <Compile Include="IRepo\IAnnouncementContext.cs" />
     <Compile Include="IRepo\IAnnouncementRepo.cs" />
+    <Compile Include="IRepo\ICategoryRepo.cs" />
     <Compile Include="Migrations\201809121800265_start.cs" />
     <Compile Include="Migrations\201809121800265_start.Designer.cs">
       <DependentUpon>201809121800265_start.cs</DependentUpon>
@@ -140,8 +141,10 @@
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Views\AccountViewModels.cs" />
+    <Compile Include="Models\Views\AnnouncementsFromCategoryViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repo\AnnouncementRepo.cs" />
+    <Compile Include="Repo\CategoryRepo.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201809121800265_start.resx">
