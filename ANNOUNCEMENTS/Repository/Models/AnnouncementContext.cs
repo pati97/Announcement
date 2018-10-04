@@ -14,6 +14,7 @@ namespace Repository.Models
         public AnnouncementContext()
             : base("DefaultConnection")
         {
+            //this.Configuration.ProxyCreationEnabled = false;
         }
 
         public static AnnouncementContext Create()

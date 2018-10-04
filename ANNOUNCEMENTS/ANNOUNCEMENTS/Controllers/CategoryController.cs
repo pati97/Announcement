@@ -38,5 +38,12 @@ namespace ANNOUNCEMENTS.Controllers
             return View(model);
         }
         
+        [Route("JSON")]
+        public ActionResult CategoryInJson()
+        {
+            var categories = _repo.GetCategory().AsNoTracking();
+
+            return Json(categories,JsonRequestBehavior.AllowGet);
+        }
     }
 }

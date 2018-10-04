@@ -61,10 +61,12 @@
             <td>
                 @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-warning" })
 
-                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Pracownik"))
+                @if (User.Identity.IsAuthenticated || User.IsInRole("Admin") || User.IsInRole("Pracownik"))
                 {
                     <br />
                     @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })
+                    <br/>
+                    @Html.ActionLink("Add Category", "CreateCategory", new { id = item.Id}, new { @class = "btn btn-success" })
                     if (User.IsInRole("Admin"))
                     {
                         <br />
